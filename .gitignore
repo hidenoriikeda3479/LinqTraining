@@ -1,0 +1,52 @@
+# ビルド結果
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]nyCPU/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# ユーザー固有のファイル
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# ツール設定
+_ReSharper*/
+*.resharper
+[Tt]est[Rr]esult*/
+
+# プロジェクトファイル内のユーザー固有のセクション
+*.csproj.user
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# パッケージファイル
+*.nupkg
+# パッケージキャッシュディレクトリ
+packages/
+
+# Others
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+*.psess
+*.vsp
+*.vspx
+*.bak
+*.swp
+*.*.swp
+*.tmp
+*.log
+*.vsdisco
+*.docstates
+*Thumbs.db
