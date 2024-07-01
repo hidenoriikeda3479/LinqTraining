@@ -38,12 +38,13 @@ namespace LearningLinqAP
         static void SelectBasic(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            var result = employees.Select(n => n.Name).ToList();
 
             #region Expected
             var expected = new List<string> { "田中", "鈴木", "佐藤", "山田", "加藤" };
             PrintResult("全社員の名前を取得する課題", result.SequenceEqual(expected));
             #endregion
+  
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace LearningLinqAP
         static void WhereBasic(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            var result = employees.Where(n => n.Salary >= 60000).Select(n => n.Name).ToList();
 
             #region Expected
             var expected = new List<string> { "鈴木", "山田" };
@@ -69,7 +70,7 @@ namespace LearningLinqAP
         static void SelectWhereBasic(List<Employee> employees, List<Department> departments)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            var result = employees.Where(n => n.DepartmentId == 1).Select(n => n.Name).ToList();
 
             #region Expected
             var expected = new List<string> { "田中", "山田" };
@@ -84,7 +85,7 @@ namespace LearningLinqAP
         static void SelectAdvanced(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            var result = employees.Select(n => n.JoinDate).ToList();
 
             #region Expected
             var expected = new List<DateTime>
@@ -95,6 +96,7 @@ namespace LearningLinqAP
                 new DateTime(2016, 1, 1),
                 new DateTime(2015, 1, 1)
             };
+
             PrintResult("全社員の入社日を取得する課題", result.SequenceEqual(expected));
             #endregion
         }
@@ -106,7 +108,7 @@ namespace LearningLinqAP
         static void WhereAdvanced(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            var result = employees.Where(n => n.DepartmentId == 2).Select(n => n.Name).ToList();
 
             #region Expected
             var expected = new List<string> { "鈴木", "佐藤" };
@@ -121,7 +123,7 @@ namespace LearningLinqAP
         static void SelectDifficult(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            var result = employees.Select(n => n.DepartmentId).ToList();
 
             #region Expected
             var expected = new List<int> { 1, 2, 2, 1, 3 };
@@ -136,7 +138,9 @@ namespace LearningLinqAP
         static void WhereDifficult(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
+            DateTime hireDate = new DateTime(2018,1,1);
+
+            var result = employees.Where(n => n.JoinDate.Year >= hireDate.Year).Select(n => n.Name).ToList();
 
             #region Expected
             var expected = new List<string> { "田中", "佐藤" };
@@ -151,8 +155,8 @@ namespace LearningLinqAP
         static void SelectWhereDifficult(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees;
-
+            var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000).ToList();
+            
             #region Expected
             var expected = new List<(string Name, int DepartmentId)>
             {
