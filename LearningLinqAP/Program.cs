@@ -23,11 +23,11 @@ namespace LearningLinqAP
             SelectWhereBasic(employees, departments);
 
             SelectAdvanced(employees);
-            WhereAdvanced(employees);
+            WhereAdvanced(employees, departments);
 
             SelectDifficult(employees);
             WhereDifficult(employees);
-            SelectWhereDifficult(employees);
+            SelectWhereDifficult(employees, departments);
 
             Console.WriteLine("Press Enter to close...");
             Console.ReadLine();
@@ -102,14 +102,21 @@ namespace LearningLinqAP
         }
 
         /// <summary>
-        /// Whereの課題: 部門IDが2の社員を取得
+        /// Whereの課題: 部門IDが2の社員を取得 追加課題：結合に直す.join
         /// </summary>
         /// <param name="employees">社員リスト</param>
-        static void WhereAdvanced(List<Employee> employees)
+        static void WhereAdvanced(List<Employee> employees, List<Department> departments)
         {
-            // resultに抽出結果を入れてね。
-            var result = employees.Where(n => n.DepartmentId == 2).Select(n => n.Name).ToList();
-
+            //EmployeesとDepartmentの内部結合
+            //親テーブルemployees、子テーブルdepartmentsをjoinで選択
+            //変数eと変数dを結合する主キー：DepartmentId
+            //結合した新規テーブルに対して、eには親テーブルより名前を取得、dには子テーブルのidを取得
+            var result = employees.Join
+                         (departments,
+                         e => e.DepartmentId,
+                         d => d.DepartmentId,
+                         (e, d) => new { name = e.Name , id = d.DepartmentId }).Where(d => d.id == 2).Select(e => e.name).ToList();
+           
             #region Expected
             var expected = new List<string> { "鈴木", "佐藤" };
             PrintResult("部門IDが2の社員を取得する課題", result.SequenceEqual(expected));
@@ -149,13 +156,22 @@ namespace LearningLinqAP
         }
 
         /// <summary>
-        /// selectとWhereの組み合わせの課題: 部門IDが1で、給与が55000以上の社員の名前と部門IDを取得
+        /// selectとWhereの組み合わせの課題: 部門IDが1で、給与が55000以上の社員の名前と部門IDを取得　追加課題：結合に直す.join
         /// </summary>
         /// <param name="employees">社員リスト</param>
-        static void SelectWhereDifficult(List<Employee> employees)
+        static void SelectWhereDifficult(List<Employee> employees,List<Department> departments)
         {
+            //EmployeesとDepartmentの内部結合
+            var result = employees.Join
+                (departments,
+                 a => a.DepartmentId,
+                 b => b.DepartmentId,
+                 (a, b) => new { departmentId = a.DepartmentId, salary = a.Salary ,  a.Name , a.DepartmentId})
+                .Where(a => a.departmentId == 1 && a.salary >= 55000).ToList();
+
+
             // resultに抽出結果を入れてね。
-            var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000).ToList();
+            //var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000).ToList();
 
             #region Expected
             var expected = new List<(string Name, int DepartmentId)>
