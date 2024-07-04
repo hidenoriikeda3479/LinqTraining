@@ -108,9 +108,6 @@ namespace LearningLinqAP
         static void WhereAdvanced(List<Employee> employees, List<Department> departments)
         {
             //EmployeesとDepartmentの内部結合
-            //親テーブルemployees、子テーブルdepartmentsをjoinで選択
-            //変数eと変数dを結合する主キー：DepartmentId
-            //結合した新規テーブルに対して、eには親テーブルより名前を取得、dには子テーブルのidを取得
             var result = employees.Join
                          (departments,
                          e => e.DepartmentId,
@@ -166,9 +163,7 @@ namespace LearningLinqAP
                 (departments,
                  a => a.DepartmentId,
                  b => b.DepartmentId,
-                 (a, b) => new { departmentId = a.DepartmentId, salary = a.Salary ,  a.Name , a.DepartmentId})
-                .Where(a => a.departmentId == 1 && a.salary >= 55000).ToList();
-
+                 (a, b) => new { a, b }).Select(b => b.a).Where(a => a.DepartmentId == 1 && a.Salary >= 55000).ToList();
 
             // resultに抽出結果を入れてね。
             //var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000).ToList();
