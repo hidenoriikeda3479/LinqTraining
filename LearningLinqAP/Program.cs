@@ -21,7 +21,7 @@ namespace LearningLinqAP
             SelectWhereBasic(employees, departments);
 
             SelectAdvanced(employees);
-            WhereAdvanced(employees);
+            WhereAdvanced(employees, departments);
 
             SelectDifficult(employees);
             WhereDifficult(employees);
@@ -44,7 +44,7 @@ namespace LearningLinqAP
             var expected = new List<string> { "田中", "鈴木", "佐藤", "山田", "加藤" };
             PrintResult("全社員の名前を取得する課題", result.SequenceEqual(expected));
             #endregion
-  
+
         }
 
         /// <summary>
@@ -105,10 +105,14 @@ namespace LearningLinqAP
         /// Whereの課題: 部門IDが2の社員を取得
         /// </summary>
         /// <param name="employees">社員リスト</param>
-        static void WhereAdvanced(List<Employee> employees)
+        static void WhereAdvanced(List<Employee> employees, List<Department> departments)
         {
             // resultに抽出結果を入れてね。
-            var result = employees.Where(n => n.DepartmentId == 2).Select(n => n.Name).ToList();
+            var result = employees.Join(departments, e => e.DepartmentId, d => d.DepartmentId, 
+                (e, d) => new { Employee = e, Department = d })
+        .Where(ed => ed.Department.DepartmentId == 2)
+        .Select(ed => ed.Employee.Name) .ToList();
+
 
             #region Expected
             var expected = new List<string> { "鈴木", "佐藤" };
@@ -138,7 +142,7 @@ namespace LearningLinqAP
         static void WhereDifficult(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            DateTime hireDate = new DateTime(2018,1,1);
+            DateTime hireDate = new DateTime(2018, 1, 1);
 
             var result = employees.Where(n => n.JoinDate.Year >= hireDate.Year).Select(n => n.Name).ToList();
 
@@ -155,8 +159,9 @@ namespace LearningLinqAP
         static void SelectWhereDifficult(List<Employee> employees)
         {
             // resultに抽出結果を入れてね。
-            var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000).ToList();
-            
+            var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000)
+        .Select(n => new { n.Name, n.DepartmentId }).ToList();
+
             #region Expected
             var expected = new List<(string Name, int DepartmentId)>
             {
