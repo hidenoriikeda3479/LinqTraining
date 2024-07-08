@@ -25,7 +25,7 @@ namespace LearningLinqAP
 
             SelectDifficult(employees);
             WhereDifficult(employees);
-            SelectWhereDifficult(employees);
+            SelectWhereDifficult(employees, departments);
 
             Console.WriteLine("Press Enter to close...");
             Console.ReadLine();
@@ -109,9 +109,9 @@ namespace LearningLinqAP
         {
             // resultに抽出結果を入れてね。
             var result = employees.Join(departments, e => e.DepartmentId, d => d.DepartmentId, 
-                (e, d) => new { Employee = e, Department = d })
-        .Where(ed => ed.Department.DepartmentId == 2)
-        .Select(ed => ed.Employee.Name) .ToList();
+                (e, d) => new { e.Name, d })
+                .Where(ed => ed.d.DepartmentId == 2)
+                .Select(ed => ed.Name).ToList();
 
 
             #region Expected
@@ -156,11 +156,13 @@ namespace LearningLinqAP
         /// selectとWhereの組み合わせの課題: 部門IDが1で、給与が55000以上の社員の名前と部門IDを取得
         /// </summary>
         /// <param name="employees">社員リスト</param>
-        static void SelectWhereDifficult(List<Employee> employees)
+        static void SelectWhereDifficult(List<Employee> employees, List<Department> departments)
         {
             // resultに抽出結果を入れてね。
-            var result = employees.Where(n => n.DepartmentId == 1 && n.Salary >= 55000)
-        .Select(n => new { n.Name, n.DepartmentId }).ToList();
+            var result = employees.Join(departments, e => e.DepartmentId, d => d.DepartmentId,
+                (e, d) => new { e, d })
+                .Where(ed => ed.e.Salary >= 55000 && ed.d.DepartmentId == 1)
+                .Select(ed => new { ed.e.Name, ed.d.DepartmentId }).ToList();
 
             #region Expected
             var expected = new List<(string Name, int DepartmentId)>
